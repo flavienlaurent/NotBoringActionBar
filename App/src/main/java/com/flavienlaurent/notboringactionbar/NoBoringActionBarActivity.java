@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -29,8 +30,8 @@ public class NoBoringActionBarActivity extends Activity {
     private View mPlaceHolderView;
     private AccelerateDecelerateInterpolator mSmoothInterpolator;
 
-    private Rect mRect1 = new Rect();
-    private Rect mRect2 = new Rect();
+    private RectF mRect1 = new RectF();
+    private RectF mRect2 = new RectF();
 
     public static float clamp(float f1, float f2, float f3) {
         return Math.max(Math.min(f1, f3), f2);
@@ -83,13 +84,13 @@ public class NoBoringActionBarActivity extends Activity {
     }
 
     private void interpolate(View view1, View view2, float interpolation) {
-        Rect rect1 = getOnScreenRect(mRect1, view1);
-        Rect rect2 = getOnScreenRect(mRect2, view2);
+        getOnScreenRect(mRect1, view1);
+        getOnScreenRect(mRect2, view2);
 
-        float scaleX = 1.0F + interpolation * (rect2.width() / rect1.width() - 1.0F);
-        float scaleY = 1.0F + interpolation * (rect2.height() / rect1.height() - 1.0F);
-        float translationX = 0.5F * (interpolation * (rect2.left + rect2.right - rect1.left - rect1.right));
-        float translationY = 0.5F * (interpolation * (rect2.top + rect2.bottom - rect1.top - rect1.bottom));
+        float scaleX = 1.0F + interpolation * (mRect2.width() / mRect1.width() - 1.0F);
+        float scaleY = 1.0F + interpolation * (mRect2.height() / mRect1.height() - 1.0F);
+        float translationX = 0.5F * (interpolation * (mRect2.left + mRect2.right - mRect1.left - mRect1.right));
+        float translationY = 0.5F * (interpolation * (mRect2.top + mRect2.bottom - mRect1.top - mRect1.bottom));
 
         view1.setTranslationX(translationX);
         view1.setTranslationY(translationY - mHeader.getTranslationY());
@@ -97,7 +98,7 @@ public class NoBoringActionBarActivity extends Activity {
         view1.setScaleY(scaleY);
     }
 
-    private Rect getOnScreenRect(Rect rect, View view) {
+    private RectF getOnScreenRect(RectF rect, View view) {
         rect.set(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
         return rect;
     }
