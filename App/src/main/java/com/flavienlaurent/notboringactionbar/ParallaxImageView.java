@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 /**
  * Created by f.laurent on 21/11/13.
- * antoine-merle.com tips
+ * antoine-merle.com inspiration
  */
 public class ParallaxImageView extends ImageView {
 

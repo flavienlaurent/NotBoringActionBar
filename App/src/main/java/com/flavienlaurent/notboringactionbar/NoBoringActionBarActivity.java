@@ -3,7 +3,6 @@ package com.flavienlaurent.notboringactionbar;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.content.res.Resources;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -24,7 +23,7 @@ public class NoBoringActionBarActivity extends Activity {
     private int mHeaderHeight;
     private int mMinHeaderTranslation;
     private ListView mListView;
-    private ImageView mHeaderPicture;
+    private KenBurnsView mHeaderPicture;
     private ImageView mHeaderLogo;
     private View mHeader;
     private View mPlaceHolderView;
@@ -32,10 +31,6 @@ public class NoBoringActionBarActivity extends Activity {
 
     private RectF mRect1 = new RectF();
     private RectF mRect2 = new RectF();
-
-    public static float clamp(float f1, float f2, float f3) {
-        return Math.max(Math.min(f1, f3), f2);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +44,8 @@ public class NoBoringActionBarActivity extends Activity {
 
         mListView = (ListView) findViewById(R.id.listview);
         mHeader = findViewById(R.id.header);
-        mHeaderPicture = (ImageView) findViewById(R.id.header_picture);
+        mHeaderPicture = (KenBurnsView) findViewById(R.id.header_picture);
+        mHeaderPicture.setResourceIds(R.drawable.picture0, R.drawable.picture1);
         mHeaderLogo = (ImageView) findViewById(R.id.header_logo);
 
         setupActionBar();
@@ -81,6 +77,10 @@ public class NoBoringActionBarActivity extends Activity {
                 getActionBarTitleView().setAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
             }
         });
+    }
+
+    public static float clamp(float value, float max, float min) {
+        return Math.max(Math.min(value, min), max);
     }
 
     private void interpolate(View view1, View view2, float interpolation) {
