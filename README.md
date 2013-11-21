@@ -26,4 +26,4 @@ License
     See the License for the specific language governing permissions and
     limitations under the License.
   
- [1]: https://github.com/flavienlaurent/NotBoringActionBar/blob/master/graphics/notboringab.gif
+ [1]: https://raw.github.com/flavienlaurent/NotBoringActionBar/blob/master/graphics/notboringab.gif
