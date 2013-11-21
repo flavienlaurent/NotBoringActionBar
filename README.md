@@ -1,8 +1,8 @@
 News Stand app makes the Action Bar not boring
 ==================
 
-I'm currently working on a blog post to explain how to achieve the whole edition view:
-- action bar translation effect
+I'm currently working on a blog post to explain how to create the whole edition view:
+- action bar transition
 - Ken Burns animation
 
 Stay tuned :)
