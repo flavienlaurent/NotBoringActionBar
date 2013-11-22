@@ -1,4 +1,4 @@
-No borgin ActionBar
+No boring ActionBar
 ==================
 
 http://flavienlaurent.com/blog/2013/11/20/making-your-action-bar-not-boring/
