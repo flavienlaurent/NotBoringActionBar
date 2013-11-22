@@ -1,11 +1,11 @@
-News Stand app makes the Action Bar not boring
+No borgin ActionBar
 ==================
 
-I'm currently working on a blog post to explain how to create the whole edition view:
-- action bar transition
-- Ken Burns animation
+http://flavienlaurent.com/blog/2013/11/20/making-your-action-bar-not-boring/
 
-Stay tuned :)
+An explaination on how to implement the edition screen of the Newsstand app.
+- ActionBar effect
+- Ken Burns animation
 
 ![Example Image][1]
 
