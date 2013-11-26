@@ -1,10 +1,17 @@
 package com.flavienlaurent.notboringactionbar;
 
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.TypefaceSpan;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -19,6 +26,7 @@ import java.util.ArrayList;
 public class NoBoringActionBarActivity extends Activity {
 
     private static final String TAG = "NoBoringActionBarActivity";
+    private int mActionBarTitleColor;
     private int mActionBarHeight;
     private int mHeaderHeight;
     private int mMinHeaderTranslation;
@@ -31,6 +39,11 @@ public class NoBoringActionBarActivity extends Activity {
 
     private RectF mRect1 = new RectF();
     private RectF mRect2 = new RectF();
+
+    private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
+    private SpannableString mSpannableString;
+
+    private TypedValue mTypedValue = new TypedValue();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +60,11 @@ public class NoBoringActionBarActivity extends Activity {
         mHeaderPicture = (KenBurnsView) findViewById(R.id.header_picture);
         mHeaderPicture.setResourceIds(R.drawable.picture0, R.drawable.picture1);
         mHeaderLogo = (ImageView) findViewById(R.id.header_logo);
+
+        mActionBarTitleColor = getResources().getColor(R.color.actionbar_title_color);
+
+        mSpannableString = new SpannableString(getString(R.string.noboringactionbar_title));
+        mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(mActionBarTitleColor);
 
         setupActionBar();
         setupListView();
@@ -74,9 +92,18 @@ public class NoBoringActionBarActivity extends Activity {
                 float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
                 interpolate(mHeaderLogo, getActionBarIconView(), mSmoothInterpolator.getInterpolation(ratio));
                 //actionbar title alpha
-                getActionBarTitleView().setAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
+                //getActionBarTitleView().setAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
+                //---------------------------------
+                //better way thanks to @cyrilmottier
+                setTitleAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
             }
         });
+    }
+
+    private void setTitleAlpha(float alpha) {
+        mAlphaForegroundColorSpan.setAlpha(alpha);
+        mSpannableString.setSpan(mAlphaForegroundColorSpan, 0, mSpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getActionBar().setTitle(mSpannableString);
     }
 
     public static float clamp(float value, float max, float min) {
@@ -124,25 +151,24 @@ public class NoBoringActionBarActivity extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.setIcon(R.drawable.ic_transparent);
 
-        getActionBarTitleView().setAlpha(0f);
+        //getActionBarTitleView().setAlpha(0f);
     }
 
     private ImageView getActionBarIconView() {
         return (ImageView) findViewById(android.R.id.home);
     }
 
-    private TextView getActionBarTitleView() {
+    /*private TextView getActionBarTitleView() {
         int id = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
         return (TextView) findViewById(id);
-    }
+    }*/
 
     public int getActionBarHeight() {
         if (mActionBarHeight != 0) {
             return mActionBarHeight;
         }
-        final TypedValue tv = new TypedValue();
-        getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-        mActionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        getTheme().resolveAttribute(android.R.attr.actionBarSize, mTypedValue, true);
+        mActionBarHeight = TypedValue.complexToDimensionPixelSize(mTypedValue.data, getResources().getDisplayMetrics());
         return mActionBarHeight;
     }
 }
