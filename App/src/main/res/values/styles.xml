@@ -1,9 +1,10 @@
 <resources>
 
-    <style name="TransparentTheme" parent="@android:style/Theme.Holo.Light">
+    <style name="TransparentTheme" parent="<a style='cursor: pointer;' id='ar0'>@android:style/Theme.Holo.Light</a>">
         <item name="android:windowBackground">@null</item>
         <item name="android:actionBarStyle">@style/ActionBarStyle.Transparent</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="ActionBarStyle.Transparent" parent="@android:Widget.ActionBar">
