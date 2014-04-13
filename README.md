@@ -1,5 +1,7 @@
-No boring ActionBar
+No boring ActionBar (port to earlier versions than HoneyComb)
 ==================
+
+NOTE: This project contains the original project from flavienlaurent + classes (NoBoringSupportActionBarActivity + KenBurnsSupportView) that enable to use this awesome project since SDK 8. 
 
 http://flavienlaurent.com/blog/2013/11/20/making-your-action-bar-not-boring/
 
