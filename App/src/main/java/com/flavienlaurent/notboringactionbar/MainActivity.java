@@ -22,9 +22,14 @@ public class MainActivity extends Activity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NoBoringActionBarActivity.class));
+                startActivity(new Intent(MainActivity.this, getBoringActionBarActivityClass()));
             }
         });
+    }
+
+    private Class getBoringActionBarActivityClass() {
+        return Build.VERSION.SDK_INT > 10 ?
+                NoBoringActionBarActivity.class : NoBoringSupportActionBarActivity.class;
     }
 
 

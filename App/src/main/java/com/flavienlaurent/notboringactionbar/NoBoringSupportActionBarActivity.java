@@ -1,9 +1,9 @@
 package com.flavienlaurent.notboringactionbar;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.TypedValue;
@@ -14,9 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.nineoldandroids.view.ViewHelper;
+
 import java.util.ArrayList;
 
-public class NoBoringActionBarActivity extends Activity {
+public class NoBoringSupportActionBarActivity extends ActionBarActivity {
 
     private static final String TAG = "NoBoringActionBarActivity";
     private int mActionBarTitleColor;
@@ -24,7 +26,7 @@ public class NoBoringActionBarActivity extends Activity {
     private int mHeaderHeight;
     private int mMinHeaderTranslation;
     private ListView mListView;
-    private KenBurnsView mHeaderPicture;
+    private KenBurnsSupportView mHeaderPicture;
     private ImageView mHeaderLogo;
     private View mHeader;
     private View mPlaceHolderView;
@@ -46,11 +48,11 @@ public class NoBoringActionBarActivity extends Activity {
         mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
         mMinHeaderTranslation = -mHeaderHeight + getActionBarHeight();
 
-        setContentView(R.layout.activity_noboringactionbar);
+        setContentView(R.layout.activity_noboringactionbar_support);
 
         mListView = (ListView) findViewById(R.id.listview);
         mHeader = findViewById(R.id.header);
-        mHeaderPicture = (KenBurnsView) findViewById(R.id.header_picture);
+        mHeaderPicture = (KenBurnsSupportView) findViewById(R.id.header_picture);
         mHeaderPicture.setResourceIds(R.drawable.picture0, R.drawable.picture1);
         mHeaderLogo = (ImageView) findViewById(R.id.header_logo);
 
@@ -80,9 +82,9 @@ public class NoBoringActionBarActivity extends Activity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int scrollY = getScrollY();
                 //sticky actionbar
-                mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
+                ViewHelper.setTranslationY(mHeader, Math.max(-scrollY, mMinHeaderTranslation));
                 //header_logo --> actionbar icon
-                float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
+                float ratio = clamp(ViewHelper.getTranslationY(mHeader) / mMinHeaderTranslation, 0.0f, 1.0f);
                 interpolate(mHeaderLogo, getActionBarIconView(), mSmoothInterpolator.getInterpolation(ratio));
                 //actionbar title alpha
                 //getActionBarTitleView().setAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
@@ -96,7 +98,8 @@ public class NoBoringActionBarActivity extends Activity {
     private void setTitleAlpha(float alpha) {
         mAlphaForegroundColorSpan.setAlpha(alpha);
         mSpannableString.setSpan(mAlphaForegroundColorSpan, 0, mSpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        getActionBar().setTitle(mSpannableString);
+        getSupportActionBar().setTitle(mSpannableString);
+        getSupportActionBar().setBackgroundDrawable(null);
     }
 
     public static float clamp(float value, float max, float min) {
@@ -112,10 +115,12 @@ public class NoBoringActionBarActivity extends Activity {
         float translationX = 0.5F * (interpolation * (mRect2.left + mRect2.right - mRect1.left - mRect1.right));
         float translationY = 0.5F * (interpolation * (mRect2.top + mRect2.bottom - mRect1.top - mRect1.bottom));
 
-        view1.setTranslationX(translationX);
-        view1.setTranslationY(translationY - mHeader.getTranslationY());
-        view1.setScaleX(scaleX);
-        view1.setScaleY(scaleY);
+        ViewHelper.setTranslationX(view1, translationX);
+        final float headerTranslationY = ViewHelper.getTranslationY(mHeader);
+
+        ViewHelper.setTranslationY(view1, translationY - headerTranslationY);
+        ViewHelper.setScaleX(view1, scaleX);
+        ViewHelper.setScaleY(view1, scaleY);
     }
 
     private RectF getOnScreenRect(RectF rect, View view) {
@@ -131,6 +136,7 @@ public class NoBoringActionBarActivity extends Activity {
 
         int firstVisiblePosition = mListView.getFirstVisiblePosition();
         int top = c.getTop();
+
         int headerHeight = 0;
         if (firstVisiblePosition >= 1) {
             headerHeight = mPlaceHolderView.getHeight();
@@ -140,14 +146,15 @@ public class NoBoringActionBarActivity extends Activity {
     }
 
     private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
         actionBar.setIcon(R.drawable.ic_transparent);
 
         //getActionBarTitleView().setAlpha(0f);
     }
 
     private ImageView getActionBarIconView() {
-        return (ImageView) findViewById(android.R.id.home);
+        return (ImageView) findViewById(android.support.v7.appcompat.R.id.home);
     }
 
     /*private TextView getActionBarTitleView() {
@@ -159,7 +166,7 @@ public class NoBoringActionBarActivity extends Activity {
         if (mActionBarHeight != 0) {
             return mActionBarHeight;
         }
-        getTheme().resolveAttribute(android.R.attr.actionBarSize, mTypedValue, true);
+        getTheme().resolveAttribute(R.attr.actionBarSize, mTypedValue, true);
         mActionBarHeight = TypedValue.complexToDimensionPixelSize(mTypedValue.data, getResources().getDisplayMetrics());
         return mActionBarHeight;
     }

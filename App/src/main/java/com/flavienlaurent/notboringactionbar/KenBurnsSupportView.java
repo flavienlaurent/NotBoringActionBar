@@ -1,24 +1,24 @@
 package com.flavienlaurent.notboringactionbar;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.util.Random;
 
 /**
  * Created by f.laurent on 21/11/13.
  */
-public class KenBurnsView extends FrameLayout {
+public class KenBurnsSupportView extends FrameLayout {
 
     private static final String TAG = "KenBurnsView";
 
@@ -42,15 +42,15 @@ public class KenBurnsView extends FrameLayout {
         }
     };
 
-    public KenBurnsView(Context context) {
+    public KenBurnsSupportView(Context context) {
         this(context, null);
     }
 
-    public KenBurnsView(Context context, AttributeSet attrs) {
+    public KenBurnsSupportView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public KenBurnsView(Context context, AttributeSet attrs, int defStyle) {
+    public KenBurnsSupportView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mHandler = new Handler();
     }
@@ -73,7 +73,7 @@ public class KenBurnsView extends FrameLayout {
         Log.d(TAG, "new active=" + mActiveImageIndex);
 
         final ImageView activeImageView = mImageViews[mActiveImageIndex];
-        activeImageView.setAlpha(0.0f);
+        ViewHelper.setAlpha(activeImageView, 0.0f);
         ImageView inactiveImageView = mImageViews[inactiveIndex];
 
         animate(activeImageView);
@@ -88,11 +88,18 @@ public class KenBurnsView extends FrameLayout {
     }
 
     private void start(View view, long duration, float fromScale, float toScale, float fromTranslationX, float fromTranslationY, float toTranslationX, float toTranslationY) {
-        view.setScaleX(fromScale);
-        view.setScaleY(fromScale);
-        view.setTranslationX(fromTranslationX);
-        view.setTranslationY(fromTranslationY);
-        ViewPropertyAnimator propertyAnimator = view.animate().translationX(toTranslationX).translationY(toTranslationY).scaleX(toScale).scaleY(toScale).setDuration(duration);
+        ViewHelper.setScaleX(view, fromScale);
+        ViewHelper.setScaleY(view, fromScale);
+        ViewHelper.setTranslationX(view, fromTranslationX);
+        ViewHelper.setTranslationY(view, fromTranslationY);
+        ViewPropertyAnimator propertyAnimator = ViewPropertyAnimator
+                .animate(view)
+                .translationX(toTranslationX)
+                .translationY(toTranslationY)
+                .scaleX(toScale)
+                .scaleY(toScale)
+                .setDuration(duration);
+
         propertyAnimator.start();
         Log.d(TAG, "starting Ken Burns animation " + propertyAnimator);
     }
