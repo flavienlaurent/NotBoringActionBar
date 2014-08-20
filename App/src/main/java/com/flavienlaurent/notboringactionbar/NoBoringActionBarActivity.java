@@ -106,8 +106,8 @@ public class NoBoringActionBarActivity extends Activity {
         getActionBar().setTitle(mSpannableString);
     }
 
-    public static float clamp(float value, float max, float min) {
-        return Math.max(Math.min(value, min), max);
+    public static float clamp(float value, float min, float max) {
+        return Math.max(min,Math.min(value, max));
     }
 
     private void interpolate(View view1, View view2, float interpolation) {
