@@ -107,7 +107,7 @@ public class NoBoringActionBarActivity extends Activity {
     }
 
     public static float clamp(float value, float max, float min) {
-        return Math.max(Math.min(value, min), max);
+        return Math.max(min, Math.min(max, value));
     }
 
     private void interpolate(View view1, View view2, float interpolation) {
