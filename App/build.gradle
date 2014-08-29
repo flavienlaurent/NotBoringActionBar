@@ -1,38 +1,25 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.+'
-    }
-}
-apply plugin: 'android'
-
-repositories {
-    mavenCentral()
-}
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '17.0.0'
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
     }
     buildTypes {
+	debug {
+
+	}
+
         release {
             runProguard true
             proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
         }
     }
-    productFlavors {
-        defaultFlavor {
-            proguardFile 'proguard-rules.txt'
-        }
-    }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:13.0.0'
+    compile 'com.android.support:support-v4:20.0.0'
 }
