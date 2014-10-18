@@ -17,11 +17,24 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height">
 
-        <com.flavienlaurent.notboringactionbar.KenBurnsView
-            android:id="@+id/header_picture"
+        <ViewSwitcher
+            android:id="@+id/header_switcher"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/picture0" />
+            android:inAnimation="@android:anim/fade_in"
+            android:outAnimation="@android:anim/fade_out">
+
+            <com.flaviofaria.kenburnsview.KenBurnsView
+                android:id="@+id/picture0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.flaviofaria.kenburnsview.KenBurnsView
+                android:id="@+id/picture1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </ViewSwitcher>
 
         <ImageView
             android:id="@+id/header_logo"
