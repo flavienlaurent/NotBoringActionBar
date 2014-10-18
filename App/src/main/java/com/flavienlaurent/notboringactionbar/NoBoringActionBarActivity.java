@@ -1,5 +1,6 @@
 package com.flavienlaurent.notboringactionbar;
 
+import android.animation.LayoutTransition;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -14,16 +16,29 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.TypefaceSpan;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
+
+import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.flaviofaria.kenburnsview.KenBurnsView.TransitionListener;
+import com.flaviofaria.kenburnsview.Transition;
 
 import java.util.ArrayList;
 
-public class NoBoringActionBarActivity extends Activity {
+public class NoBoringActionBarActivity extends Activity implements TransitionListener {
+
+    private static final int TRANSITIONS_TO_SWITCH = 3;
+
+    private static final int[] PICTURE_RES_IDS = {
+            R.drawable.picture0,
+            R.drawable.picture1
+    };
 
     private static final String TAG = "NoBoringActionBarActivity";
     private int mActionBarTitleColor;
@@ -31,7 +46,9 @@ public class NoBoringActionBarActivity extends Activity {
     private int mHeaderHeight;
     private int mMinHeaderTranslation;
     private ListView mListView;
-    private KenBurnsView mHeaderPicture;
+    private ViewSwitcher mPictureSwitcher;
+    private KenBurnsView mPicture0;
+    private KenBurnsView mPicture1;
     private ImageView mHeaderLogo;
     private View mHeader;
     private View mPlaceHolderView;
@@ -39,6 +56,9 @@ public class NoBoringActionBarActivity extends Activity {
 
     private RectF mRect1 = new RectF();
     private RectF mRect2 = new RectF();
+
+    private int mTransitionsCount = 0;
+    private int mCurrentPictureIndex = 0;
 
     private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
     private SpannableString mSpannableString;
@@ -57,8 +77,12 @@ public class NoBoringActionBarActivity extends Activity {
 
         mListView = (ListView) findViewById(R.id.listview);
         mHeader = findViewById(R.id.header);
-        mHeaderPicture = (KenBurnsView) findViewById(R.id.header_picture);
-        mHeaderPicture.setResourceIds(R.drawable.picture0, R.drawable.picture1);
+        mPictureSwitcher = (ViewSwitcher) findViewById(R.id.header_switcher);
+        mPicture0 = (KenBurnsView) findViewById(R.id.picture0);
+        mPicture0.setTransitionListener(this);
+        mPicture1 = (KenBurnsView) findViewById(R.id.picture1);
+        mPicture1.setTransitionListener(this);
+        swapPicture();
         mHeaderLogo = (ImageView) findViewById(R.id.header_logo);
 
         mActionBarTitleColor = getResources().getColor(R.color.actionbar_title_color);
@@ -69,6 +93,7 @@ public class NoBoringActionBarActivity extends Activity {
         setupActionBar();
         setupListView();
     }
+
 
     private void setupListView() {
         ArrayList<String> FAKES = new ArrayList<String>();
@@ -170,5 +195,30 @@ public class NoBoringActionBarActivity extends Activity {
         getTheme().resolveAttribute(android.R.attr.actionBarSize, mTypedValue, true);
         mActionBarHeight = TypedValue.complexToDimensionPixelSize(mTypedValue.data, getResources().getDisplayMetrics());
         return mActionBarHeight;
+    }
+
+
+    @Override
+    public void onTransitionStart(Transition transition) {
+
+    }
+
+
+    @Override
+    public void onTransitionEnd(Transition transition) {
+        mTransitionsCount++;
+        if (mTransitionsCount == TRANSITIONS_TO_SWITCH) {
+            swapPicture();
+            mTransitionsCount = 0;
+        }
+    }
+
+
+    private void swapPicture() {
+        KenBurnsView kenBurnsView = (KenBurnsView) mPictureSwitcher.getNextView();
+        mCurrentPictureIndex = (mCurrentPictureIndex + 1) % PICTURE_RES_IDS.length;
+        int drawableResId = PICTURE_RES_IDS[mCurrentPictureIndex];
+        kenBurnsView.setImageResource(drawableResId);
+        mPictureSwitcher.showNext();
     }
 }
