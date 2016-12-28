@@ -25,7 +25,7 @@ public class KenBurnsView extends FrameLayout {
     private final Handler mHandler;
     private int[] mResourceIds;
     private ImageView[] mImageViews;
-    private int mActiveImageIndex = -1;
+    private int mActiveImageIndex = -1, mNextActiveImage = 2;
 
     private final Random random = new Random();
     private int mSwapMs = 10000;
@@ -74,7 +74,7 @@ public class KenBurnsView extends FrameLayout {
 
         final ImageView activeImageView = mImageViews[mActiveImageIndex];
         activeImageView.setAlpha(0.0f);
-        ImageView inactiveImageView = mImageViews[inactiveIndex];
+        final ImageView inactiveImageView = mImageViews[inactiveIndex];
 
         animate(activeImageView);
 
@@ -84,6 +84,23 @@ public class KenBurnsView extends FrameLayout {
                 ObjectAnimator.ofFloat(inactiveImageView, "alpha", 1.0f, 0.0f),
                 ObjectAnimator.ofFloat(activeImageView, "alpha", 0.0f, 1.0f)
         );
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) { }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if(mResourceIds.length > 2) {
+                    if(mNextActiveImage == mResourceIds.length)
+                        mNextActiveImage = 0;
+                    inactiveImageView.setImageResource(mResourceIds[mNextActiveImage]);
+                }
+                mNextActiveImage++;
+            }
+            @Override
+            public void onAnimationCancel(Animator animation) { }
+            @Override
+            public void onAnimationRepeat(Animator animation) { }
+        });
         animatorSet.start();
     }
 
