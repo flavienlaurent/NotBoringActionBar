@@ -3,7 +3,7 @@ No boring ActionBar
 
 http://flavienlaurent.com/blog/2013/11/20/making-your-action-bar-not-boring/
 
-An explaination on how to implement the edition screen of the Newsstand app.
+An explanation on how to implement the edition screen of the Newsstand app.
 - ActionBar effect
 - Ken Burns animation
 
